@@ -11,8 +11,12 @@ struct DetailView: View{
     
     let url: String?
     
+    var onNavigateToNextScreen: (() -> Void)?
+    
     var body: some View{
-        Text(url ?? "")
+        Text(url ?? "").onTapGesture {
+            onNavigateToNextScreen?()
+        }
     }
 }
 
