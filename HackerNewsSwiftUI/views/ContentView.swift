@@ -10,29 +10,27 @@ import SwiftUI
 struct ContentView: View {
     
     @ObservedObject var networkManager = NetworkManager()
+    @State var path: [Post] = []
     
     var body: some View {
         
-        NavigationView{
-            if #available(iOS 16.0, *) {
+        if #available(iOS 16.0, *) {
+            NavigationStack(path: $path){
                 List(networkManager.posts, rowContent: { id in
                     HStack{
                         Text(String(id.points ?? 0))
-                        Text(id.title ?? "")
-                    }
+                        Text(id.title ?? "").onTapGesture {
+                            path.append(id)
+                        }
+                    }.background()
                 }).scrollIndicators(.hidden, axes: .vertical)
-                    .navigationTitle("Hacker News")
-            } else {
-                List(networkManager.posts, rowContent: { id in
-                    HStack{
-                        Text(String(id.points ?? 0))
-                        Text(id.title ?? "")
-                    }
+                .navigationTitle("Hacker News")
+                .navigationDestination(for: Post.self, destination: { post in
+                    DetailView(url: post.url)
                 })
             }
-        }
-        .onAppear {
-            networkManager.loadNews()
+        } else {
+            // Fallback on earlier versions
         }
     }
 }

@@ -11,7 +11,7 @@ struct PostModel: Decodable{
     let hits: [Post]?
 }
 
-struct Post: Decodable, Identifiable{
+struct Post: Decodable, Identifiable, Hashable{
     let title: String?
     let url: String?
     let points: Int?
